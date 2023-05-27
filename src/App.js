@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Card from "./Card";
+import { Route, Routes, Navigate } from "react-router-dom";
+import Detail from "./Detail";
 
 function App() {
 
   const [data, setData] = useState({});
+  const[id, setId] = useState(0);
+
+  console.log("appid: "+ id);
 
   useEffect(() => {
 
@@ -17,15 +22,26 @@ function App() {
     APIcall();
   }, []);
 
-  console.log("data: ", data);
 
   return (
     <div className="App">
       <Navbar />
-      {data.map((item, index) =>  {
-        return <Card name={item.show.name} />
-      })}
 
+      <Routes>
+        <Route path="/" element={<Navigate to="/tv-shows/avengers" />}></Route>
+        <Route path="/tv-shows/avengers" 
+          element={
+            <div id="container">
+              {data[0]?data.map((item, index) =>  {
+                return <Card data={item.show} key={index} setId={setId} />
+              }):""}
+            </div>}>
+        </Route>
+
+        <Route path={"/tv-shows/details/*"} element={<Detail id={id} />}></Route>
+
+      </Routes>
+      
     </div>
   );
 }
